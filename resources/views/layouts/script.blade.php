@@ -21,4 +21,11 @@
 @yield('script')
 <!-- Main JS-->
 <script src="{{asset('/')}}js/main.js"></script>
+<script !src="">
+    $(document).ready(function () {
+        $('a[href="' + current_url + '"]').parents('li').addClass('active');
+        $('a[href="' + current_url + '"]').parent('li').addClass('active open');
+        $('a[href="' + current_url + '"]').parent().parent('ul').css('display','block');
+    })
+</script>
 @stack('script')
