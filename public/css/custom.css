@@ -1,0 +1,26 @@
+.page-title{
+    height: 40px;
+    width: 40px;
+}
+
+.add-btn {
+    border-radius: 5px !important;
+}
+
+.page-title button{
+    height: 40px;
+    width: 40px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border-radius: 50%;
+    z-index: 9999;
+}
+
+.alert-success{
+    border-left: 5px solid green ;
+}
+
+.alert-error{
+    border-left: 5px solid red ;
+}
