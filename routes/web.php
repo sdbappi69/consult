@@ -44,10 +44,13 @@ Route::group(['middleware'=>'auth'],function(){
 //    Permission routes
     Route::group(['prefix' => 'permission'],function (){
         Route::get('/','PermissionController@index')->name('permission.index');
-        Route::get('/create','PermissionController@create')->name('permission.create');
         Route::post('/store','PermissionController@store')->name('permission.store');
-        Route::get('/{id}/show','PermissionController@show')->name('permission.show');
-        Route::get('/{id}/edit','PermissionController@edit')->name('permission.edit');
         Route::post('/{id}/update','PermissionController@update')->name('permission.update');
+    });
+//    Permission routes
+    Route::group(['prefix' => 'service'],function (){
+        Route::get('/','ServiceController@index')->name('service.index');
+        Route::post('/store','ServiceController@store')->name('service.store');
+        Route::post('/{id}/update','ServiceController@update')->name('service.update');
     });
 });

@@ -6,6 +6,8 @@ use App\Http\Repositories\PermissionRepository;
 use App\Http\Repositories\PermissionRepositoryInterface;
 use App\Http\Repositories\RoleRepository;
 use App\Http\Repositories\RoleRepositoryInterface;
+use App\Http\Repositories\ServiceRepository;
+use App\Http\Repositories\ServiceRepositoryInterface;
 use App\Http\Repositories\UserRepository;
 use App\Http\Repositories\UserRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
@@ -30,6 +32,10 @@ class BackendServiceProvider extends ServiceProvider
         $this->app->bind(
             UserRepositoryInterface::class,
             UserRepository::class
+        );
+        $this->app->bind(
+            ServiceRepositoryInterface::class,
+            ServiceRepository::class
         );
     }
 

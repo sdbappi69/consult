@@ -12,8 +12,8 @@
                         <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                 </li>
                 <li>
-                    <a href="table.html">
-                        <i class="fas fa-table"></i>Tables</a>
+                    <a href="{{route('service.index')}}">
+                        <i class="fas fa-cog"></i>Service List</a>
                 </li>
                 <li>
                     <a href="form.html">
