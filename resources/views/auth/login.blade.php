@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title','Login')
+
 @section('content')
     <div class="page-wrapper">
         <div class="page-content--bge5">
@@ -11,6 +13,7 @@
                                 <img src="images/icon/logo.png" alt="CoolAdmin">
                             </a>
                         </div>
+                        @include('status')
                         <div class="login-form">
                             <form action="{{route('login')}}" method="POST">
                                 @csrf

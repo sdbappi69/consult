@@ -3,5 +3,9 @@
 use Spatie\Permission\Models\Role;
 
 function allRoles(){
-    return Role::whereNotIn('id',[2,3,4,5,6,7])->pluck('name','name')->toArray();
+    return Role::pluck('name','name')->toArray();
+}
+
+function allServices(){
+    return \App\Service::where('status',1)->pluck('name','id')->toArray();
 }

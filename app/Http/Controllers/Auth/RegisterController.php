@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use App\Service;
 use App\User;
+use http\Env\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -52,6 +54,14 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'msisdn' => ['required','regex:^(?:\+?+88)?01[345-9]\d{8}$^'],
+            'viber' => ['nullable','regex:^(?:\+?+88)?01[345-9]\d{8}$^'],
+            'emo' => ['nullable','regex:^(?:\+?+88)?01[345-9]\d{8}$^'],
+            'telegram' => ['nullable','regex:^(?:\+?+88)?01[345-9]\d{8}$^'],
+            'whatsapp' => ['nullable','regex:^(?:\+?+88)?01[345-9]\d{8}$^'],
+            'image' => ['nullable','mimes:jpg,png,jpeg,webp'],
+            'service' => ['required','exists:services,id'],
+            'birth_date' => ['required'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -62,12 +72,39 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    protected function create(array $data)
+    protected function create($data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+        $image = null;
+        if ($data->has('image')) {
+            if ($data->file('image')) {
+                $file = $data->file('image');
+                $image = time() . rand(1111, 9999) . '.' . $file->getClientOriginalExtension();
+                $img_upload_path = 'uploads/';
+                $file->move($img_upload_path, $image);
+            }
+        }
+        $service = Service::findOrfail($data->service);
+        $user =  User::create([
+            'name' => $data->name,
+            'email' => $data->email,
+            'mobile' => $data->msisdn,
+            'status' => 0,
+            'password' => Hash::make($data->password),
+            'attributes' => json_encode([
+                'image_url' => $image,
+                'service_charge_percentage' => 0,
+                'birth_date' => $data->birth_date,
+                'profession' => $service->name,
+                'mediums' => json_encode([
+                    'mobile' => $data->msisdn,
+                    'viber' => $data->viber,
+                    'skype' => $data->skype,
+                    'whatsapp' => $data->whatsapp,
+                    'emo' => $data->emo,
+                    'telegram' => $data->telegram,
+                ])
+            ])
         ]);
+        return $user;
     }
 }

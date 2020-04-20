@@ -29,6 +29,9 @@ Route::group(['middleware'=>'auth'],function(){
         Route::get('/{id}/show','UserController@show')->name('user.show');
         Route::get('/{id}/edit','UserController@edit')->name('user.edit');
         Route::post('/{id}/update','UserController@update')->name('user.update');
+        Route::get('/request-list','UserController@userRequest')->name('user.request_list');
+        Route::post('/request-list','UserController@userRequestStore')->name('user.request_list.store');
+        Route::post('/request-list/{id}/update','UserController@userRequestUpdate')->name('user.request_list.update');
     });
 
     Route::get('/profile','UserController@profile')->name('user.profile');
@@ -47,7 +50,7 @@ Route::group(['middleware'=>'auth'],function(){
         Route::post('/store','PermissionController@store')->name('permission.store');
         Route::post('/{id}/update','PermissionController@update')->name('permission.update');
     });
-//    Permission routes
+//    Service routes
     Route::group(['prefix' => 'service'],function (){
         Route::get('/','ServiceController@index')->name('service.index');
         Route::post('/store','ServiceController@store')->name('service.store');

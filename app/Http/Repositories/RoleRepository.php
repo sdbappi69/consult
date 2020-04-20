@@ -33,7 +33,7 @@ class RoleRepository implements RoleRepositoryInterface
             'guard_name' => $request->guard,
         ]);
         $role->syncPermissions($request->permission);
-        session()->flash('success','Role Added.');
+        session()->flash('successMsg','Role Added.');
         return redirect()->route('role.index');
     }
 
@@ -45,7 +45,7 @@ class RoleRepository implements RoleRepositoryInterface
             'guard_name' => $request->guard,
         ]);
         $role->syncPermissions($request->permission);
-        session()->flash('success','Role Updated.');
+        session()->flash('successMsg','Role Updated.');
         return redirect()->route('role.index');
     }
 

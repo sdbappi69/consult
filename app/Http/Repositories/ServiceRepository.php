@@ -13,11 +13,8 @@ class ServiceRepository implements ServiceRepositoryInterface
     {
         $req = $request->all();
         $service = Service::query();
-//        ($request->f_name ? $users->where('name','like','%'.$request->f_name.'%') : null);
-//        ($request->f_email? $users->where('email','like','%'.$request->f_email.'%') : null);
-//        ($request->f_role? $users->whereHas('roles',function($q) use($request){
-//            return $q->where('name',$request->f_role);
-//        }) : null);
+        ($request->f_name ? $service->where('name','like','%'.$request->f_name.'%') : null);
+        ($request->f_alias ? $service->where('alias','like','%'.$request->f_alias.'%') : null);
         $service = $service->paginate(10);
 
         return view('service.index',compact('service','req'));

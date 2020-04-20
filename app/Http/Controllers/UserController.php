@@ -30,4 +30,16 @@ class UserController extends Controller
     public function profileUpdate(Request $request){
         return $this->user->profileUpdate($request);
     }
+
+    public function userRequest(Request $request){
+        return $this->user->userRequest($request);
+    }
+
+    public function userRequestUpdate(Request $request, $id){
+        return $this->user->userRequestUpdate($request, $id);
+    }
+
+    public function userRequestStore(Request $request){
+        return $this->user->userRequestStore($request);
+    }
 }

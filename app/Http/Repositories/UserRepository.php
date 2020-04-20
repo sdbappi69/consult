@@ -6,6 +6,7 @@ use App\Http\Repositories\LoginRepositoryInterface;
 use App\User;
 use Auth;
 use DB;
+use http\Env\Request;
 use Session;
 use Validator;
 use GuzzleHttp\Client;
@@ -148,5 +149,32 @@ class UserRepository implements UserRepositoryInterface
                 return back();
             }
         }
+    }
+
+    public function userRequest($request){
+        $req = $request->all();
+        $users = User::where('status',0);
+        ($request->f_name ? $users->where('name','like','%'.$request->f_name.'%') : null);
+        ($request->f_email? $users->where('email','like','%'.$request->f_email.'%') : null);
+        $users = $users->paginate(10);
+        return view('user.request_index',compact('users','req'));
+    }
+
+    public function userRequestStore($request){
+
+    }
+
+    public function userRequestUpdate($request, $id){
+        $user = User::findOrFail($id);
+        $attributes = json_decode($user->attributes);
+        $attributes->service_charge_percentage = $request->service_charge_percentage;
+        $attributes->history =json_encode($attributes);
+        $user->syncRoles([$request->role]);
+        $user->update([
+           'status' => 1,
+            'attributes' => json_encode($attributes)
+        ]);
+        session()->flash('successMsg','User status successfully on boarded!!');
+        return back();
     }
 }
