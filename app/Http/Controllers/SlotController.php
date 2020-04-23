@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SlotRequest;
 use App\Slot;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
@@ -18,7 +19,7 @@ class SlotController extends Controller
         return view('slot.index',compact('appointment','req'));
     }
 
-    public function store(Request $request){
+    public function store(SlotRequest $request){
         $validator = Validator::make($request->all(), [
             'date' => ['required','after:today','before:'.Carbon::now()->addDay(7)->format('Y-m-d'),
                     Rule::unique('slots','date')->where(function($query){
@@ -66,23 +67,7 @@ class SlotController extends Controller
         return back();
     }
 
-    public function update(Request $request, $id){
-        $validator = Validator::make($request->all(), [
-            'date' => ['required','after:today','before:'.Carbon::now()->addDay(7)->format('Y-m-d'),
-                Rule::unique('slots','date')->where(function($query) use($id){
-                    $query->where('provider_id',auth()->user()->id);
-                })->ignore($id)
-            ],
-            'status' => 'required|between:1,2',
-            'slot_duration' => 'required|numeric',
-            'time_from' => 'required',
-            'time_to' => 'required|after:time_from',
-        ]);
-        if ($validator->fails()) {
-            return back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+    public function update(SlotRequest $request, $id){
         $slot = Slot::FindOrFail($id);
         $old_attribute = json_decode($slot->attributes);
         $update_validator_date = Carbon::now()->addDay(2)->format('Y-m-d');
