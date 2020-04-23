@@ -56,4 +56,10 @@ Route::group(['middleware'=>'auth'],function(){
         Route::post('/store','ServiceController@store')->name('service.store');
         Route::post('/{id}/update','ServiceController@update')->name('service.update');
     });
+//    Provider slot routes
+    Route::group(['prefix' => 'slot'],function (){
+        Route::get('/','SlotController@index')->name('slot.index');
+        Route::post('/store','SlotController@store')->name('slot.store');
+        Route::post('/{id}/update','SlotController@update')->name('slot.update');
+    });
 });

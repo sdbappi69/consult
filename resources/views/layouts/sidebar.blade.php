@@ -20,7 +20,7 @@
                         <i class="fas fa-cog"></i>Service List</a>
                 </li>
                 <li>
-                    <a href="{{route('service.index')}}">
+                    <a href="{{route('slot.index')}}">
                         <i class="fas fa-calendar-times"></i>Manage Slots</a>
                 </li>
                 <li class="has-sub">

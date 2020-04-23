@@ -40,7 +40,7 @@ class UserRepository implements UserRepositoryInterface
                 ->withErrors($validator)
                 ->withInput();
         }
-        $image = null;
+        $image = 'user.png';
         if ($request->has('image')) {
             if ($request->file('image')) {
                 $file = $request->file('image');
