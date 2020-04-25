@@ -2,40 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\CategoryProvider;
 use App\Http\Requests\SlotRequest;
 use App\Slot;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
-use Validator;
 use Illuminate\Http\Request;
 
 class SlotController extends Controller
 {
     public function index(Request $request){
         $req = $request->all();
-        $appointment = Slot::where('provider_id',auth()->user()->id);
+        $appointment = Slot::with('getProvider')->wherehas('getProvider',function ($query){
+            return $query->where('provider_id',auth()->user()->id);
+        });
         ($request->f_date ? $appointment->where('date',$request->f_date) : null);
         $appointment = $appointment->paginate(10);
-        return view('slot.index',compact('appointment','req'));
+        $service_category = CategoryProvider::with('category')->where('provider_id',auth()->user()->id)->get()->pluck('category.name','id')->toArray();
+        return view('slot.index',compact('appointment','req','service_category'));
     }
 
     public function store(SlotRequest $request){
-        $validator = Validator::make($request->all(), [
-            'date' => ['required','after:today','before:'.Carbon::now()->addDay(7)->format('Y-m-d'),
-                    Rule::unique('slots','date')->where(function($query){
-                        $query->where('provider_id',auth()->user()->id);
-                    })
-                ],
-            'status' => 'required|between:1,2',
-            'slot_duration' => 'required|numeric',
-            'time_from' => 'required',
-            'time_to' => 'required|after:time_from',
-        ]);
-        if ($validator->fails()) {
-            return back()
-                ->withErrors($validator)
-                ->withInput();
-        }
         $to = Carbon::createFromFormat('h:i A', $request->time_from);
         $from = Carbon::createFromFormat('h:i A', $request->time_to);
         $diff_in_minutes = $to->diffInMinutes($from);
@@ -53,7 +40,7 @@ class SlotController extends Controller
             ]);
         }
         Slot::create([
-           'provider_id' => auth()->user()->id,
+           'category_provider_id' => $request->category_provider_id,
            'date' => date('Y-m-d',strtotime($request->date)),
            'status' => $request->status,
            'created_by' => auth()->user()->id,

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Repositories\ServiceRepositoryInterface;
+use App\Http\Requests\ServiceRequest;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -18,11 +19,11 @@ class ServiceController extends Controller
         return $this->service->index($request);
     }
 
-    public function store(Request $request){
+    public function store(ServiceRequest $request){
         return $this->service->store($request);
     }
 
-    public function update(Request $request, $id){
+    public function update(ServiceRequest $request, $id){
         return $this->service->update($request, $id);
     }
 }

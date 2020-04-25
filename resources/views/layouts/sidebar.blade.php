@@ -20,8 +20,24 @@
                         <i class="fas fa-cog"></i>Service List</a>
                 </li>
                 <li>
+                    <a href="{{route('category.index')}}">
+                        <i class="fas fa-list"></i>Category List</a>
+                </li>
+                <li>
+                    <a href="{{route('category_provider.index')}}">
+                        <i class="fas fa-refresh"></i>Provider's Category</a>
+                </li>
+                <li>
+                    <a href="{{route('category_provider.reqList')}}">
+                        <i class="fas fa-universal-access"></i>Provider's Request List</a>
+                </li>
+                <li>
                     <a href="{{route('slot.index')}}">
                         <i class="fas fa-calendar-times"></i>Manage Slots</a>
+                </li>
+                <li>
+                    <a href="{{route('appointment.index')}}">
+                        <i class="fas fa-list-alt"></i>Appointment List</a>
                 </li>
                 <li class="has-sub">
                     <a class="js-arrow" href="#">

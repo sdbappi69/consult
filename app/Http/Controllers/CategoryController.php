@@ -1,27 +1,25 @@
 <?php
 
-namespace App\Http\Repositories;
+namespace App\Http\Controllers;
 
-use App\Http\Repositories\LoginRepositoryInterface;
+use App\Category;
+use App\Http\Requests\CategoryRequest;
 use App\Service;
-use Validator;
-use GuzzleHttp\Client;
+use Illuminate\Http\Request;
 
-class ServiceRepository implements ServiceRepositoryInterface
+class CategoryController extends Controller
 {
-    public function index($request)
-    {
+    public function index(Request $request){
         $req = $request->all();
-        $service = Service::query();
-        ($request->f_name ? $service->where('name','like','%'.$request->f_name.'%') : null);
-        ($request->f_alias ? $service->where('alias','like','%'.$request->f_alias.'%') : null);
-        $service = $service->paginate(10);
-
-        return view('service.index',compact('service','req'));
+        $category = Category::query();
+        ($request->f_name ? $category->where('name','like','%'.$request->f_name.'%') : null);
+        ($request->f_alias ? $category->where('alias','like','%'.$request->f_alias.'%') : null);
+        $category = $category->paginate(10);
+        $service = Service::pluck('name','id')->toArray();
+        return view('category.index',compact('req','category','service'));
     }
 
-    public function store($request)
-    {
+    public function store(CategoryRequest $request){
         $image = null;
         $icon = null;
         if ($request->has('image')) {
@@ -40,7 +38,8 @@ class ServiceRepository implements ServiceRepositoryInterface
                 $file->move($img_upload_path, $icon);
             }
         }
-        $service = Service::create([
+        Category::create([
+            'service_id' => $request->service_id,
             'name' => $request->name,
             'alias' => $request->alias,
             'created_by' => auth()->user()->id,
@@ -52,14 +51,13 @@ class ServiceRepository implements ServiceRepositoryInterface
                 'history' => []
             ])
         ]);
-        session()->flash('successMsg','Service successfully created!!!');
+        session()->flash('successMsg','Category successfully created!!!');
         return back();
     }
 
-    public function update($request,$id)
-    {
-        $service = Service::findOrFail($id);
-        $old_attr = json_decode($service->attributes);
+    public function update(CategoryRequest $request, $id){
+        $category = Category::findOrFail($id);
+        $old_attr = json_decode($category->attributes);
         $image = $old_attr->image_url;
         $icon = $old_attr->icon_url;
         if ($request->has('image')) {
@@ -78,7 +76,8 @@ class ServiceRepository implements ServiceRepositoryInterface
                 $file->move($img_upload_path, $icon);
             }
         }
-        $service->update([
+        $category->update([
+            'service_id' => $request->service_id,
             'name' => $request->name,
             'alias' => $request->alias,
             'updated_by' => auth()->user()->id,
@@ -90,7 +89,7 @@ class ServiceRepository implements ServiceRepositoryInterface
                 'history' => $old_attr
             ])
         ]);
-        session()->flash('successMsg','Service updated successfully!!!');
+        session()->flash('successMsg','Category updated successfully!!!');
         return back();
     }
 }

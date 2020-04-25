@@ -11,6 +11,9 @@ class Slot extends Model
     protected $guarded = [];
 
     public function getProvider(){
-        return $this->belongsTo(User::class,'provider_id');
+        return $this->hasOneThrough(User::class,CategoryProvider::class,'id','id','category_provider_id','provider_id');
+    }
+    public function category(){
+        return $this->hasOneThrough(Category::class,CategoryProvider::class,'id','id','category_provider_id','category_id');
     }
 }

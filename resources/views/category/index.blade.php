@@ -1,17 +1,11 @@
 @extends('layouts.master')
-
-@section('css')
-    <link rel="stylesheet" href="{{asset('/')}}vendor/bootstrap-datepicker/bootstrap-datepicker.min.css">
-    <link rel="stylesheet" href="{{asset('/')}}vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
-@endsection
-
 @section('content')
     <div class="page-header">
         <div class="row">
             <div class="col-sm-12">
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{route('home')}}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:(0);"> Appointment Slot</a></li>
+                    <li class="breadcrumb-item"><a href="javascript:(0);"> Category </a></li>
                     <li class="breadcrumb-item active">List</li>
                 </ul>
             </div>
@@ -28,16 +22,20 @@
                         <div class="row">
                             <div class="col-xl-2">
                                 <div class="form-group">
-                                    {!! Form::label('f_date','Date')!!}
-                                    {!! Form::text('f_date', @$req['f_date'], ['class'=>'form-control mb-3','placeholder' => 'Date','id'=>'f_date'])!!}
+                                    {!! Form::label('f_name','Name')!!}
+                                    {!! Form::text('f_name', @$req['f_name'], ['class'=>'form-control mb-3','placeholder' => 'Name','id'=>'f_name'])!!}
                                 </div>
                             </div>
-                            <div class="col-xl-8"></div>
                             <div class="col-xl-2">
                                 <div class="form-group">
-                                    <label for="">&nbsp</label>
-                                    <button class="btn btn-info btn-block"> Filter  </button>
+                                    {!! Form::label('f_email','alias')!!}
+                                    {!! Form::text('f_email', @$req['f_email'], ['class'=>'form-control mb-3','placeholder' => 'Email','id'=>'f_email'])!!}
                                 </div>
+                            </div>
+                            <div class="col-md-6"></div>
+                            <div class="col-md-2">
+                                <label for="">&nbsp</label>
+                                <button class="btn btn-info btn-block"> Filter  </button>
                             </div>
                         </div>
                     </form>
@@ -46,24 +44,22 @@
                             <thead>
                             <tr class="text-center">
                                 <th>Id</th>
-                                <th>Provider</th>
-                                <th>Category</th>
-                                <th>Date</th>
-                                <th>Total Slot</th>
-                                <th>status</th>
+                                <th>Name</th>
+                                <th>Service Name</th>
+                                <th>fa-icon</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @php $sl = $appointment->appends($req)->firstItem(); @endphp
-                            @forelse ($appointment as $user)
+                            @php $sl = $category->appends($req)->firstItem(); @endphp
+                            @forelse ($category as $user)
                                 <tr class="text-center">
                                     <td>{{ $sl++ }}</td>
-                                    <td>{{ ($user->getProvider->name ?? null)}}</td>
-                                    <td>{{ ($user->category->name ?? null)}}</td>
-                                    <td>{{($user->date ?? 'No Name')}}</td>
-                                    <td>{{ count(json_decode(json_decode($user->attributes)->available_slots) ?? 0) }}</td>
-                                    <td> @if($user->status == 1) Active @else Inactive @endif </td>
+                                    <td>{{($user->name ?? 'No Name')}}</td>
+                                    <td>{{ $user->service->name ?? null}}</td>
+                                    <td>{{ json_decode($user->attributes)->fa_icon }}</td>
+                                    <td> @if($user->status == 1) Active @else Pending @endif </td>
                                     <td>
                                         <button data-value="{{$user}}" class="btn btn-primary edit-btn">
                                             <i class="fa fa-edit"></i>
@@ -72,14 +68,14 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center">No slot found</td>
+                                    <td colspan="9" class="text-center">No provider's category found</td>
                                 </tr>
                             @endforelse
                             </tbody>
                         </table>
                         <nav aria-label="Page navigation example" class="m-3">
-                            <span>Showing {{ $appointment->appends($req)->firstItem() }} to {{ $appointment->appends($req)->lastItem() }} of {{ $appointment  ->appends($req)->total() }} entries</span>
-                            <div>{{ $appointment->appends($req)->render() }}</div>
+                            <span>Showing {{ $category->appends($req)->firstItem() }} to {{ $category->appends($req)->lastItem() }} of {{ $category  ->appends($req)->total() }} entries</span>
+                            <div>{{ $category->appends($req)->render() }}</div>
                         </nav>
                     </div>
                 </div>
@@ -105,40 +101,46 @@
                 {!! Form::token() !!}
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-xl-4">
+                        <div class="col-xl-6">
                             <div class="form-group">
-                                {!! Form::label('category_provider_id','Service Category')!!}
-                                {!! Form::select('category_provider_id', $service_category,null, ['class'=>'form-control mb-3','placeholder' => 'Select a category','id'=>'category_provider_id'])!!}
+                                {!! Form::label('name','Name')!!}
+                                {!! Form::text('name', '', ['class'=>'form-control mb-3','placeholder' => 'Name','id'=>'name'])!!}
                             </div>
                         </div>
-                        <div class="col-xl-4">
+                        <div class="col-xl-6">
                             <div class="form-group">
-                                {!! Form::label('date','Date')!!}
-                                {!! Form::text('date', '', ['class'=>'form-control mb-3 datepicker','placeholder' => 'Appointment Date','id'=>'date','required'=>true])!!}
+                                {!! Form::label('alias','Alias')!!}
+                                {!! Form::text('alias', '', ['class'=>'form-control mb-3','placeholder' => 'Alias','id'=>'alias'])!!}
                             </div>
                         </div>
-                        <div class="col-xl-4">
+                        <div class="col-xl-6">
+                            <div class="form-group">
+                                {!! Form::label('service_id','Service')!!}
+                                {!! Form::select('service_id', $service,null, ['class'=>'form-control mb-3','placeholder' => 'Select a service','id'=>'service_id'])!!}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {!! Form::label('image','Image')!!}
+                                {!! Form::file('image', ['class'=>'form-control mb-3','id'=>'image'])!!}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {!! Form::label('icon','Icon')!!}
+                                {!! Form::file('icon', ['class'=>'form-control mb-3','id'=>'icon'])!!}
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="form-group">
+                                {!! Form::label('fa_icon','fa-icon')!!}
+                                {!! Form::text('fa_icon', '', ['class'=>'form-control mb-3','placeholder' => 'fa icon','id'=>'fa_icon'])!!}
+                            </div>
+                        </div>
+                        <div class="col-xl-12">
                             <div class="form-group">
                                 {!! Form::label('status','Status')!!}
-                                {!! Form::select('status', [1=>'Active',2=>'De Active'],null, ['class'=>'form-control mb-3','placeholder' => 'Select a status','id'=>'status'])!!}
-                            </div>
-                        </div>
-                        <div class="col-xl-4">
-                            <div class="form-group">
-                                {!! Form::label('slot_duration','Slot Duration')!!}
-                                {!! Form::number('slot_duration', '', ['class'=>'form-control mb-3 slot_durationpicker','placeholder' => 'Slot duration','id'=>'slot_duration','required'=>true])!!}
-                            </div>
-                        </div>
-                        <div class="col-xl-4">
-                            <div class="form-group">
-                                {!! Form::label('time_from','Appointment Start From')!!}
-                                {!! Form::text('time_from', '', ['class'=>'form-control mb-3 time-slot','placeholder' => 'Slot time','id'=>'time_from','required'=>true])!!}
-                            </div>
-                        </div>
-                        <div class="col-xl-4">
-                            <div class="form-group">
-                                {!! Form::label('time_to','Appointment End To')!!}
-                                {!! Form::text('time_to', '', ['class'=>'form-control mb-3 time-slot','placeholder' => 'Slot time','id'=>'time_to','required'=>true])!!}
+                                {!! Form::select('status', [''=>'Select a status',1=>'Active',2=>'De Active'], null,['class'=>'form-control mb-3','id'=>'status','required'=>true])!!}
                             </div>
                         </div>
                         <div class="col-xl-12">
@@ -158,58 +160,34 @@
         </div>
     </div>
 @endsection
-@section('script')
-    <script src="{{asset('/')}}vendor/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
-    <script src="{{asset('/')}}vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-@endsection
 @push('script')
     <script>
         $('#add-new-btn').click(function(){
             $('.add-btn').text('Add');
-            $('#relationLabel').text('Add Appointment');
-            var url = "{{route('slot.store')}}";
+            $('#relationLabel').text('Add Category');
+            var url = "{{route('category.store')}}";
             $('#related_form').attr('action', url);
             $('#related_form').find("input[type=text],input[type=number],input[type=email]").val("");
-            $("textarea").each(function(){ $(this).val(); });
+            $("textarea").each(function(){ $(this).val(''); });
             $("option:selected").prop("selected", false)
             $('#relationModal').modal('show')
+            $('.select2').select2({ dropdownParent: $("#relationModal") })
         })
         $('.edit-btn').click(function(){
             $('.add-btn').text('Update');
-            $('#relationLabel').text('Update Appointment');
+            $('#relationLabel').text('Update Category');
             var related_data = $(this).data('value');
             var attribute = JSON.parse(related_data.attributes)
-            var slot_data = JSON.parse(attribute.available_slots)
             var url = window.location.pathname+'/'+related_data.id+'/update';
             $('#related_form').attr('action', url);
-            $('#category_provider_id').val(related_data.category_provider_id)
-            $('#date').val(related_data.date)
+            $('#alias').val(related_data.alias)
+            $('#name').val(related_data.name)
+            $('#service_id').val(related_data.service_id)
             $('#status').val(related_data.status)
             $('#description').val(attribute.description)
-            $('#slot_duration').val(slot_data[0].duration)
-            $('#time_from').val(slot_data[0].start)
-            $('#time_to').val(slot_data[slot_data.length-1].end)
+            $('#fa_icon').val(attribute.fa_icon)
             $('#relationModal').modal('show')
-        })
-        $('#f_date').datepicker({
-            format:'yyyy-m-d',
-            autoclose: true
-        })
-        $('#date').datepicker({
-            format:'yyyy-m-d',
-            autoclose: true,
-            startDate: '+1d',
-            endDate: '+7d'
-        })
-        $('.time-slot').datetimepicker({
-            minuteStep:5,
-            startView: "day",
-            minView: 0,
-            maxView: 0,
-            format: 'HH:ii P',
-            pick12HourFormat:true,
-            showMeridian: true,
-            autoclose: true
+            $('.select2').select2({ dropdownParent: $("#relationModal") })
         })
     </script>
 @endpush

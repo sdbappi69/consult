@@ -62,4 +62,24 @@ Route::group(['middleware'=>'auth'],function(){
         Route::post('/store','SlotController@store')->name('slot.store');
         Route::post('/{id}/update','SlotController@update')->name('slot.update');
     });
+//    Category provide routes
+    Route::group(['prefix' => 'category-provider'],function (){
+        Route::get('/','CategoryProviderController@index')->name('category_provider.index');
+        Route::post('/store','CategoryProviderController@store')->name('category_provider.store');
+        Route::get('/request-list','CategoryProviderController@requestList')->name('category_provider.reqList');
+        Route::post('/{id}/update','CategoryProviderController@update')->name('category_provider.update');
+    });
+//    Service Category routes
+    Route::group(['prefix' => 'category'],function (){
+        Route::get('/','CategoryController@index')->name('category.index');
+        Route::post('/store','CategoryController@store')->name('category.store');
+        Route::post('/{id}/update','CategoryController@update')->name('category.update');
+    });
+//    Appointment routes
+    Route::group(['prefix' => 'appointment'],function (){
+        Route::get('/','AppointmentController@index')->name('appointment.index');
+//        Route::post('/store','AppointmentController@store')->name('appointment.store');
+        Route::get('/{id}/view','AppointmentController@view')->name('appointment.view');
+        Route::post('/{id}/update','AppointmentController@update')->name('appointment.update');
+    });
 });

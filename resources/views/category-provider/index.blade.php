@@ -5,7 +5,7 @@
             <div class="col-sm-12">
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{route('home')}}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:(0);"> Service</a></li>
+                    <li class="breadcrumb-item"><a href="javascript:(0);"> Provider's Category </a></li>
                     <li class="breadcrumb-item active">List</li>
                 </ul>
             </div>
@@ -44,38 +44,48 @@
                             <thead>
                             <tr class="text-center">
                                 <th>Id</th>
-                                <th>Alias</th>
                                 <th>Name</th>
+                                <th>Service Name</th>
+                                <th>Slot Duration</th>
+                                <th>Slot Fee</th>
+                                <th>Slot Charge</th>
                                 <th>fa-icon</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @php $sl = $service->appends($req)->firstItem(); @endphp
-                            @forelse ($service as $user)
+                            @php $sl = $category->appends($req)->firstItem(); @endphp
+                            @forelse ($category as $user)
                                 <tr class="text-center">
                                     <td>{{ $sl++ }}</td>
-                                    <td>{{($user->alias ?? 'No Name')}}</td>
-                                    <td>{{ $user->name}}</td>
-                                    <td>{{ json_decode($user->attributes)->fa_icon }}</td>
-                                    <td> @if($user->status == 1) Active @else Inactive @endif </td>
+                                    <td>{{($user->category->name ?? 'No Name')}}</td>
+                                    <td>{{ $user->service->name ?? null}}</td>
+                                    <td>{{ json_decode($user->attributes)->min_per_slot }} Minutes</td>
+                                    <td>Tk. {{ json_decode($user->attributes)->fee_per_slot }}</td>
+                                    <td>Tk. {{ (json_decode($user->attributes)->service_charge_per_slot ?? 'N\A') }}</td>
+                                    <td>{{ json_decode($user->category->attributes)->fa_icon }}</td>
+                                    <td> @if($user->status == 1) Active @else Pending @endif </td>
                                     <td>
-                                        <button data-value="{{$user}}" class="btn btn-primary edit-btn">
-                                            <i class="fa fa-edit"></i>
-                                        </button>
+                                        @if($user->status == 1)
+                                            <span class="badge badge-success"> request accepted </span>
+                                        @else
+                                            <button data-value="{{$user}}" class="btn btn-primary edit-btn">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center">No service found</td>
+                                    <td colspan="9" class="text-center">No provider's category found</td>
                                 </tr>
                             @endforelse
                             </tbody>
                         </table>
                         <nav aria-label="Page navigation example" class="m-3">
-                            <span>Showing {{ $service->appends($req)->firstItem() }} to {{ $service->appends($req)->lastItem() }} of {{ $service  ->appends($req)->total() }} entries</span>
-                            <div>{{ $service->appends($req)->render() }}</div>
+                            <span>Showing {{ $category->appends($req)->firstItem() }} to {{ $category->appends($req)->lastItem() }} of {{ $category  ->appends($req)->total() }} entries</span>
+                            <div>{{ $category->appends($req)->render() }}</div>
                         </nav>
                     </div>
                 </div>
@@ -103,44 +113,20 @@
                     <div class="row">
                         <div class="col-xl-6">
                             <div class="form-group">
-                                {!! Form::label('alias','Alias')!!}
-                                {!! Form::text('alias', '', ['class'=>'form-control mb-3','placeholder' => 'Alias','id'=>'alias','required'=>true])!!}
+                                {!! Form::label('category_id','Provider Category')!!}
+                                {!! Form::select('category_id', $available_category_lsit, null, ['class'=>'form-control mb-3 select2','placeholder' => 'Select a Category','id'=>'category_id','required'=>true])!!}
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="form-group">
-                                {!! Form::label('name','Name')!!}
-                                {!! Form::text('name', '', ['class'=>'form-control mb-3','placeholder' => 'Name','id'=>'name'])!!}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                {!! Form::label('image','Image')!!}
-                                {!! Form::file('image', ['class'=>'form-control mb-3','id'=>'image'])!!}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                {!! Form::label('icon','Icon')!!}
-                                {!! Form::file('icon', ['class'=>'form-control mb-3','id'=>'icon'])!!}
+                                {!! Form::label('min_per_slot','Slot Duration (Minutes)')!!}
+                                {!! Form::number('min_per_slot', '', ['class'=>'form-control mb-3','placeholder' => 'Slot duration ','id'=>'min_per_slot'])!!}
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="form-group">
-                                {!! Form::label('fa_icon','fa-icon')!!}
-                                {!! Form::text('fa_icon', '', ['class'=>'form-control mb-3','placeholder' => 'fa_icon','id'=>'fa_icon'])!!}
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="form-group">
-                                {!! Form::label('status','Status')!!}
-                                {!! Form::select('status', [''=>'Select a status',1=>'Active',2=>'De Active'], null,['class'=>'form-control mb-3','id'=>'status','required'=>true])!!}
-                            </div>
-                        </div>
-                        <div class="col-xl-12">
-                            <div class="form-group">
-                                {!! Form::label('description','Description')!!}
-                                {!! Form::textarea('description', null,['class'=>'form-control mb-3','id'=>'description'])!!}
+                                {!! Form::label('fee_per_slot','Fee per slot')!!}
+                                {!! Form::number('fee_per_slot', '', ['class'=>'form-control mb-3','placeholder' => 'Fee per slot','id'=>'fee_per_slot'])!!}
                             </div>
                         </div>
                     </div>
@@ -158,27 +144,27 @@
     <script>
         $('#add-new-btn').click(function(){
             $('.add-btn').text('Add');
-            $('#relationLabel').text('Add Service');
-            var url = "{{route('service.store')}}";
+            $('#relationLabel').text('Add Your Service Category');
+            var url = "{{route('category_provider.store')}}";
             $('#related_form').attr('action', url);
             $('#related_form').find("input[type=text],input[type=number],input[type=email]").val("");
-            $("textarea").each(function(){ $(this).val(''); });
+            $("textarea").each(function(){ $(this).val(); });
             $("option:selected").prop("selected", false)
             $('#relationModal').modal('show')
+            $('.select2').select2({ dropdownParent: $("#relationModal") })
         })
         $('.edit-btn').click(function(){
             $('.add-btn').text('Update');
-            $('#relationLabel').text('Update Service');
+            $('#relationLabel').text('Update Your Service Category');
             var related_data = $(this).data('value');
             var attribute = JSON.parse(related_data.attributes)
             var url = window.location.pathname+'/'+related_data.id+'/update';
             $('#related_form').attr('action', url);
-            $('#name').val(related_data.name)
-            $('#alias').val(related_data.alias)
-            $('#fa_icon').val(attribute.fa_icon)
-            $('#description').val(attribute.description)
-            $('#status').val(related_data.status)
+            $('#category_id').val(related_data.category_id)
+            $('#min_per_slot').val(attribute.min_per_slot)
+            $('#fee_per_slot').val(attribute.fee_per_slot)
             $('#relationModal').modal('show')
+            $('.select2').select2({ dropdownParent: $("#relationModal") })
         })
     </script>
 @endpush

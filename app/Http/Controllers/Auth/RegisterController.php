@@ -95,6 +95,7 @@ class RegisterController extends Controller
                 'service_charge_percentage' => 0,
                 'birth_date' => $data->birth_date,
                 'profession' => $service->name,
+                'service_id' => $data->service,
                 'mediums' => json_encode([
                     'mobile' => $data->msisdn,
                     'viber' => $data->viber,
