@@ -2,20 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e4919e8b-aa4e-4717-9af7-f691e765ce82" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/views/appointment/view.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Auth/RegisterController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Auth/RegisterController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ServiceController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ServiceController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/SlotController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/SlotController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Helper/Helper.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Helper/Helper.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Repositories/ServiceRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Repositories/ServiceRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Requests/SlotRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Requests/SlotRequest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Slot.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Slot.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/custom.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/custom.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/layouts/sidebar.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/sidebar.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/service/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/service/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/slot/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/slot/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -37,11 +25,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/views/appointment/view.blade.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="189">
               <caret line="194" column="121" selection-start-line="194" selection-start-column="121" selection-end-line="194" selection-end-column="121" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/resources/views/layouts/sidebar.blade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="453">
+              <caret line="76" column="35" selection-end-line="83" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -143,7 +140,6 @@
         <option value="$PROJECT_DIR$/resources/views/category-provider/index.blade.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/SlotController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/CategoryProviderController.php" />
-        <option value="$PROJECT_DIR$/resources/views/layouts/sidebar.blade.php" />
         <option value="$PROJECT_DIR$/app/Medium.php" />
         <option value="$PROJECT_DIR$/resources/views/appointment/index.blade.php" />
         <option value="$PROJECT_DIR$/routes/web.php" />
@@ -152,6 +148,7 @@
         <option value="$PROJECT_DIR$/app/Appointment.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/AppointmentController.php" />
         <option value="$PROJECT_DIR$/resources/views/appointment/view.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/layouts/sidebar.blade.php" />
       </list>
     </option>
   </component>
@@ -392,12 +389,12 @@
       <workItem from="1587616567345" duration="618000" />
       <workItem from="1587652673481" duration="4950000" />
       <workItem from="1587703916649" duration="31561000" />
-      <workItem from="1587803343498" duration="810000" />
+      <workItem from="1587803343498" duration="1839000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="91420000" />
+    <option name="totallyTimeSpent" value="92449000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -801,13 +798,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/layouts/sidebar.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="39" column="49" selection-start-line="39" selection-start-column="49" selection-end-line="39" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Medium.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
@@ -874,6 +864,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
           <caret line="194" column="121" selection-start-line="194" selection-start-column="121" selection-end-line="194" selection-end-column="121" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/layouts/sidebar.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="453">
+          <caret line="76" column="35" selection-end-line="83" selection-end-column="8" />
         </state>
       </provider>
     </entry>
