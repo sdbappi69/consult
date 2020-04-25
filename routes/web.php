@@ -80,6 +80,7 @@ Route::group(['middleware'=>'auth'],function(){
         Route::get('/','AppointmentController@index')->name('appointment.index');
 //        Route::post('/store','AppointmentController@store')->name('appointment.store');
         Route::get('/{id}/view','AppointmentController@view')->name('appointment.view');
-        Route::post('/{id}/update','AppointmentController@update')->name('appointment.update');
+        Route::post('/{id}/update-log','AppointmentController@updateTimeLog')->name('appointment.time.log')->middleware('can:update appointment log');
+        Route::post('/{id}/log-get','AppointmentController@getTimeLog')->name('appointment.time.log.get')->middleware('can:update appointment log');
     });
 });

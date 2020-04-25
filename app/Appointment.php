@@ -28,4 +28,8 @@ class Appointment extends Model
     public function document(){
         return $this->hasOne(AppointmentDocument::class,'appointment_id','id');
     }
+
+    public function getTimeLog(){
+        return $this->hasMany(AppointmentLog::class,'appointment_id','id');
+    }
 }

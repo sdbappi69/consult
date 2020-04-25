@@ -101,12 +101,14 @@
                     </div>
                     <div class="card-body">
                         <div class="custom-tab">
-
                             <nav>
                                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                                     <a class="nav-item nav-link active show" id="custom-nav-home-tab" data-toggle="tab" href="#custom-nav-home" role="tab" aria-controls="custom-nav-home" aria-selected="true">Patient Information</a>
                                     <a class="nav-item nav-link" id="custom-nav-contact-tab" data-toggle="tab" href="#custom-nav-contact" role="tab" aria-controls="custom-nav-contact" aria-selected="false">Appointment Info</a>
                                     <a class="nav-item nav-link" id="custom-nav-profile-tab" data-toggle="tab" href="#custom-nav-profile" role="tab" aria-controls="custom-nav-profile" aria-selected="false">Previous Medical Documents</a>
+                                    @if($appointment->date == date('Y-m-d') && ((date('h:i A') >= $appointment->start) && (date('h:i A') <= $appointment->end)))
+                                        <a class="nav-item nav-link" id="appointment-log-tab" data-toggle="tab" href="#appointment-log" role="tab" aria-controls="appointment-log" aria-selected="false">Appointment Log</a>
+                                    @endif
                                 </div>
                             </nav>
                             <div class="tab-content pl-3 pt-2" id="nav-tabContent">
@@ -167,16 +169,16 @@
                                                 <td>{{ $appointment->medium->name }}</td>
                                             </tr>
                                             <tr>
-                                                <td>Medium No</td>
+                                                <td> Medium No </td>
                                                 <td>{{ json_decode(json_decode($appointment->client->attributes)->mediums)->{$appointment->medium->alias} }}</td>
                                             </tr>
                                             <tr>
-                                                <td>Appointment Fee</td>
-                                                <td>Tk. {{ $appointment->fee}}</td>
+                                                <td> Appointment Fee </td>
+                                                <td>Tk. {{ $appointment->fee }}</td>
                                             </tr>
                                             <tr>
-                                                <td>Appointment Reschedule Fee</td>
-                                                <td>Tk. {{ $appointment->reschedule_fee}}</td>
+                                                <td> Appointment Reschedule Fee </td>
+                                                <td>Tk. {{ $appointment->reschedule_fee }}</td>
                                             </tr>
                                         </table>
                                     </div>
@@ -190,19 +192,11 @@
                                                         <img src="{{asset('/')}}uploads/{{$file}}" class="myImg img img-thumbnail" alt="">
                                                     </div>
                                                 @elseif(strpos(mime_content_type('uploads/'.$file),'application') === 0 )
-                                                        <div class="col-md-3 mb-3">
-                                                            <a href="{{asset('/')}}uploads/{{$file}}" target="_blank">
-                                                                <span class="badge badge-success"> Click to view pdf file </span>
-                                                            </a>
-                                                            {{--<iframe--}}
-                                                                    {{--src="{{asset('/')}}uploads/{{$file}}"--}}
-                                                                    {{--width="100%"--}}
-                                                                    {{--height="400px"--}}
-                                                                    {{--style="border: none;">--}}
-                                                                {{--<p>Your browser does not support PDFs.--}}
-                                                                    {{--<a href="{{asset('/')}}uploads/{{$file}}">Download the PDF</a>.</p>--}}
-                                                            {{--</iframe>--}}
-                                                        </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        <a href="{{asset('/')}}uploads/{{$file}}" target="_blank">
+                                                            <span class="badge badge-success"> Click to view pdf file </span>
+                                                        </a>
+                                                    </div>
                                                 @else
                                                     <div class="col-md-3 mb-3">
                                                         <span class="badge badge-danger"> Invalid Document Found</span>
@@ -216,6 +210,41 @@
                                         @endforelse
                                     </div>
                                 </div>
+                                @if($appointment->date == date('Y-m-d') && ((date('h:i A') >= $appointment->start) && (date('h:i A') <= $appointment->end)))
+                                    <div class="tab-pane fade" id="appointment-log" role="tabpanel" aria-labelledby="appointment-log-tab">
+                                        <div class="row">
+                                            <div class="col-xl-12">
+                                                <p class="start-msg {{$appointment->status > 1 ? 'd-none' : null}}">Press start button to start your consultation log</p>
+                                                <p class="end-msg {{$appointment->status > 3 ? 'd-none' : null}}">Press end button to close your consultation log</p>
+                                                <button class="btn btn-success {{$appointment->status > 1 ? 'd-none' : null}} start-log-btn">Start</button>
+                                                <button class="btn btn-danger {{$appointment->status > 3 ? 'd-none' : null}} end-log-btn">End</button>
+                                                <div class="card mt-4">
+                                                    <div class="card-header">
+                                                        <h4>Appointment Log</h4>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                            <tr>
+                                                                <td>Patient Name</td>
+                                                                <td>Time</td>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="log-body">
+                                                            @foreach($appointment->getTimeLog as $log)
+                                                                <tr>
+                                                                    <td>{{$log->user->name}}</td>
+                                                                    <td>{{date('Y-m-d h:i:s A',strtotime($log->time))}}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -248,4 +277,93 @@
             modal.style.display = "none";
         });
     </script>
+    @if($appointment->date == date('Y-m-d') && ((date('h:i A') >= $appointment->start) && (date('h:i A') <= $appointment->end)))
+        <script>
+            var log_start = {{($appointment->status == 2 || $appointment->status == 3) ? 1 : 0}}
+
+            $('.start-log-btn').click(function () {
+                $.ajax({
+                    url: "{{route('appointment.time.log',$appointment->id)}}",
+                    method: 'POST',
+                    'data': {
+                        '_token': "{{csrf_token() }}",
+                        'provider_start' : 1
+                    },
+                    success: function(data) {
+                        if(data === 'success'){
+                            log_start = 1;
+                            $('.start-log-btn').addClass('d-none')
+                            $('.end-log-btn').removeClass('d-none')
+                            $('.start-msg').addClass('d-none')
+                            $('.end-msg').removeClass('d-none')
+                            alert('Your consultation started.Please Make sure you press end button while it finished.')
+                        }
+                        else{
+                            alert('Something went wrong!!!!')
+                        }
+                    },
+                    err: function(err) {
+                        alert('Something went wrong!!!!')
+                    }
+                });
+            })
+
+            $('.end-log-btn').click(function () {
+                $.ajax({
+                    url: "{{route('appointment.time.log',$appointment->id)}}",
+                    method: 'POST',
+                    'data': {
+                        '_token': "{{csrf_token() }}",
+                        'provider_end': 1
+                    },
+                    success: function(data) {
+                        $('.end-log-btn').addClass('d-none')
+                        $('.end-msg').addClass('d-none')
+                        log_start = 0
+                        alert('Your consultation finished. Thank you!!!')
+                    },
+                    err: function(err) {
+                        alert('Something went wrong!!!!')
+                    }
+                });
+            })
+
+            setInterval(function () {
+                if(log_start == 1){
+                    $.ajax({
+                        url: "{{route('appointment.time.log',$appointment->id)}}",
+                        method: 'POST',
+                        'data': {
+                            '_token': "{{csrf_token() }}"
+                        },
+                        success: function(data) {
+                            console.log(data)
+                            if(data !== 'success'){
+                                alert('Something went wrong!!!!')
+                            }
+                        },
+                        err: function(err) {
+                            alert('Something went wrong!!!!')
+                        }
+                    })
+                }
+            },90000)
+
+            setInterval(function () {
+                $.ajax({
+                    url: "{{route('appointment.time.log.get',$appointment->id)}}",
+                    method: 'POST',
+                    'data': {
+                        '_token': "{{csrf_token() }}"
+                    },
+                    success: function(data) {
+                        $('#log-body').html(data);
+                    },
+                    err: function(err) {
+                        alert('Something went wrong!!!!')
+                    }
+                });
+            },60000)
+        </script>
+    @endif
 @endpush
